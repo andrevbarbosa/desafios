@@ -4,54 +4,31 @@ public class TextAlignment {
 	private static final char SPACE_CHAR = ' ';
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator"); 
 
-	public static void main(String[] args) {
-//		System.out.println(organizeToLineSize("In the beginning God created the heavens and the earth. "
-//				+ "Now the earth was formless and empty, darkness was over the surface of the deep, and "
-//				+ "the Spirit of God was hovering over the waters.\n\nAnd God said, \"Let there be light,\" and there was light. God "
-//				+ "saw that the light was good, and he separated the light from the darkness. God called "
-//				+ "the light \"day,\" and the darkness he called \"night.\" And there was evening, "
-//				+ "and there was morning - the first day.", 40));
-////
-	
-//		System.out.println(organizeToLineSize("In the beginning God created the heavens and the earth. "
-//				+ "Nowtheearthwasformlessandempty,darknesswasoverthesurfaceofthedeep,and"
-//				+ "theSpiritofGodwashoveringoverthewaters.\n\nAnd God said, \"Let there be light,\" and there was light. God "
-//				+ "saw that the light was good, and he separated the light from the darkness. God called "
-//				+ "the light \"day,\" and the darkness he called \"night.\" And there was evening, "
-//				+ "and there was morning - the first day.", 40));
-
-//		System.out.println(organizeToLineSize("56 1256 7801 256\n78901234 56789 01234 56789 01234 56789 01234 56"
-//				+ "7890123456 7890123456789012 3456789012345 678901234567890123456 7890123456789012345678901234567890123456789012345"
-//				+ "678901234567890123456789012345678901234567890123456 78901234567890123456789012345678901234"
-//				+ "56789012345678901234567890123456789 012345678901234567890123456789 0123456789012345678901234567890123456789", 40));
-
-		System.out.println(justifyToLineSize("In the beginning God created the heavens and the earth. "
-				+ "Now the earth was formless and empty, darkness was over the surface of the deep, and "
-				+ "the Spirit of God was hovering over the waters.\n\nAnd God said, \"Let there be light,\" and there was light. God "
-				+ "saw that the light was good, and he separated the light from the darkness. God called "
-				+ "the light \"day,\" and the darkness he called \"night.\" And there was evening, "
-				+ "and there was morning - the first day.", 80));
+	/**
+	 * Justify a text within the number of columns.
+	 * 
+	 * @param text - The text to be justified. Must not be null.
+	 * @param columns - The number of columns 
+	 * @return String - the justified text.
+	 */
+	public static String justifyToLineSize(String text, int columns) {
+		if (text==null || columns <1) 
+			throw new IllegalArgumentException("Text must not be null and columns must be a positive value");
 		
-	}
-	
-	public static String justifyToLineSize(String text, int limit) {
-		if (text==null || limit <1) 
-			throw new IllegalArgumentException("Text must not be null and limit must be a positive value");
-		
-		String organizedText = organizeToLineSize(text, limit);
+		String organizedText = organizeToLineSize(text, columns);
 		
 		String[] lines = organizedText.split("\n");
 		
-		StringBuilder newText = new StringBuilder(limit * lines.length);
+		StringBuilder newText = new StringBuilder(columns * lines.length);
 		
 		for (int l = 0; l<lines.length-1; l++) {
-			if (lines[l].length()==limit || lines[l].length()<=1 || lines[l+1].length()==0) { 
+			if (lines[l].length()==columns || lines[l].length()<=1 || lines[l+1].length()==0) { 
 				newText.append(lines[l]).append(LINE_SEPARATOR);
 				continue;
 			}
 			
 			StringBuilder line = new StringBuilder(lines[l]);
-			int diff = limit - line.length();
+			int diff = columns - line.length();
 			
 			int cursor = line.length()-1;
 			while(diff>0) {
@@ -79,7 +56,7 @@ public class TextAlignment {
 					cursor--;
 				}
 				
-				diff = limit - line.length();
+				diff = columns - line.length();
 			}
 			newText.append(line).append(LINE_SEPARATOR);;
 		}
@@ -88,6 +65,13 @@ public class TextAlignment {
 	}
 		
 	
+	/**
+	 * Organize a text within a maximum limit number of columns.
+	 * 
+	 * @param text - The text to be organized. Must not be null.
+	 * @param limit - The limit of columns 
+	 * @return String - the organized text in lines.
+	 */
 	public static String organizeToLineSize(String text, int limit) {
 		if (text==null || limit <1) 
 			throw new IllegalArgumentException("Text must not be null and limit must be a positive value");
@@ -100,7 +84,6 @@ public class TextAlignment {
 		while (cursor<newText.length()) {
 			cursor = cursor + limit;
 			if (cursor >= newText.length()) break;
-			//System.out.println(newText + "\n\n");
 			
 			if (newText.substring(cursor-limit+1, cursor).indexOf(LINE_SEPARATOR)>-1) {
 				cursor = cursor - limit + newText.substring(cursor-limit+1, cursor).indexOf(LINE_SEPARATOR)+1;
@@ -135,5 +118,18 @@ public class TextAlignment {
 		
 		return newText.toString();
 	}
+	
+	
+	public static void main(String[] args) {
+		
+		System.out.println(justifyToLineSize("In the beginning God created the heavens and the earth. "
+				+ "Now the earth was formless and empty, darkness was over the surface of the deep, and "
+				+ "the Spirit of God was hovering over the waters.\n\nAnd God said, \"Let there be light,\" and there was light. God "
+				+ "saw that the light was good, and he separated the light from the darkness. God called "
+				+ "the light \"day,\" and the darkness he called \"night.\" And there was evening, "
+				+ "and there was morning - the first day.", 40));
+		
+	}
+
 
 }
